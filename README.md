@@ -1,2 +1,4 @@
 # RoboCodeThing
-This is ASafsffwfewef
+PUT THE STRATEGY HERE:
+
+NOTES FOR OTHER PPL
