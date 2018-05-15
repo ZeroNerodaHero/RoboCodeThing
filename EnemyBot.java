@@ -21,7 +21,7 @@ public class EnemyBot
     private double heading;
     private double velocity;
     private String name;
-
+//john was here
     /**
      * smthing
      */
