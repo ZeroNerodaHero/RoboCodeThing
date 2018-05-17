@@ -6,7 +6,7 @@
 
 ## In the see events function:
 * Get all the things
-* If it has a big amount of hp, start rushing at it
+* If it has a small amount of hp, start rushing at it
   * The trig shit
 * Else just keep distance
   * Just be sniper
