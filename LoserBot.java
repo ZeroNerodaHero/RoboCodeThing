@@ -1,11 +1,8 @@
 package robo;
 
 import robocode.*;
-
+import java.awt.Color;
 import java.awt.geom.Point2D;
-
-
-
 
 /**
  * A modular bot adhering to the RoboPart Interface.
@@ -18,23 +15,71 @@ import java.awt.geom.Point2D;
  * 
  * @author Sources - TODO list collaborators
  */
-public class LoserBot extends AdvancedRobot
+public class PartsBot extends AdvancedRobot
 {
     private AdvancedEnemyBot enemy = new AdvancedEnemyBot();
-
+    
     private RobotPart[] parts = new RobotPart[3]; // make three parts
-
     private final static int RADAR = 0;
-
     private final static int GUN = 1;
-
     private final static int TANK = 2;
-
-
     /**
-     * something
+     * 
+     * eqeqeqweq
+     * @param angle     john
+     * @return double
      */
+    // normalizes a bearing to between +180 and -180
+    public double normalizeBearing( double angle )
+    {
+        while ( angle > 180 ) {
+            angle -= 360;
+        }
+        while ( angle < -180 ) {
+            angle += 360;
+        }
+        return angle;
+    }
+    
+    /**
+     * 
+     * weeddddooododfsdfs
+     * @param x1    john
+     * @param y1    jon
+     * @param x2    johnny
+     * @param y2    jonny
+     * @return smthing dopble
+     */
+    public double absoluteBearing( double x1, double y1, double x2, double y2 )
+    {
+        double xo = x2 - x1;
+        double yo = y2 - y1;
+        double hyp = Point2D.distance( x1, y1, x2, y2 );
+        double arcSin = Math.toDegrees( Math.asin( xo / hyp ) );
+        double bearing = 0;
 
+        if ( xo > 0 && yo > 0 )
+        { // both pos: lower-Left
+            bearing = arcSin;
+        }
+        else if ( xo < 0 && yo > 0 )
+        { // x neg, y pos: lower-right
+            bearing = 360 + arcSin; 
+        }
+        else if ( xo > 0 && yo < 0 )
+        { // x pos, y neg: upper-left
+            bearing = 180 - arcSin;
+        }
+        else if ( xo < 0 && yo < 0 )
+        { // both neg: upper-right
+            bearing = 180 - arcSin;
+        }
+
+        return bearing;
+    }
+    /**
+     * John is not here
+     */
     public void run()
     {
         parts[RADAR] = new Radar();
@@ -53,19 +98,14 @@ public class LoserBot extends AdvancedRobot
         {
             // polymorphism galore!
             parts[i].move();
-            if ( i == 0 )
-            {
+            if ( i == 0 ) {
                 execute();
             }
         }
     }
 
-
     /**
-     * something
-     * 
-     * @param e
-     *            something
+     * @param e    no
      */
     public void onScannedRobot( ScannedRobotEvent e )
     {
@@ -73,15 +113,9 @@ public class LoserBot extends AdvancedRobot
         if ( radar.shouldTrack( e ) ) {
             enemy.update( e, this );
         }
-            
     }
-
-
     /**
-     * something
-     * 
-     * @param e
-     *            something
+     * @param e     no
      */
     public void onRobotDeath( RobotDeathEvent e )
     {
@@ -89,164 +123,75 @@ public class LoserBot extends AdvancedRobot
         if ( radar.wasTracking( e ) ) {
             enemy.reset();
         }
-            
     }
 
+    
     // ... put normalizeBearing and absoluteBearing methods here
 
-
+    
     // ... declare the RobotPart interface and classes that implement it here
     // They will be _inner_ classes.
     /**
      * 
-     * @return interface something
+     *  ewfewwf
+     *  efwfwefw
+     *
+     *  @author  wzhang831
+     *  @version May 10, 2018
+     *  @author  Period: TODO
+     *  @author  Assignment: Robo05PartsBot
+     *
+     *  @author  Sources: TODO
      */
     public interface RobotPart
     {
         /**
-         * something
-         * TODO Write your method description here.
+         * nothing here
          */
         public void init();
-        
+
         /**
-         * something
-         * TODO Write your method description here.
+         * nothing here
          */
         public void move();
     }
 
-
     /**
-     * 
-     * TODO Write your method description here.
-     * 
-     * @return double
-     * @param x1
-     *            a
-     * @param y1
-     *            a
-     * @param x2
-     *            a
-     * @param y2
-     *            a
-     */
-    // computes the absolute bearing between two points
-    public double absoluteBearing( double x1, double y1, double x2, double y2 )
-    {
-        double xo = x2 - x1;
-        double yo = y2 - y1;
-        double hyp = Point2D.distance( x1, y1, x2, y2 );
-        double arcSin = Math.toDegrees( Math.asin( xo / hyp ) );
-        double bearing = 0;
-
-        if ( xo > 0 && yo > 0 )
-        { // both pos: lower-Left
-            bearing = arcSin;
-        }
-        else if ( xo < 0 && yo > 0 )
-        { // x neg, y pos: lower-right
-            bearing = 360 + arcSin; // arcsin is negative here, actually 360 -
-                                    // ang
-        }
-        else if ( xo > 0 && yo < 0 )
-        { // x pos, y neg: upper-left
-            bearing = 180 - arcSin;
-        }
-        else if ( xo < 0 && yo < 0 )
-        { // both neg: upper-right
-            bearing = 180 - arcSin; // arcsin is negative here, actually 180 +
-                                    // ang
-        }
-
-        return bearing;
-    }
-
-
-    /**
-     * 
-     * TODO Write your method description here.
-     * 
-     * @param angle a
-     *            
-     * @return double 
-     */
-    // normalizes a bearing to between +180 and -180
-    public double normalizeBearing( double angle )
-    {
-        while ( angle > 180 )
-        {
-            angle -= 360;
-        }
-
-        while ( angle < -180 )
-        {
-            angle += 360;
-        }
-
-        return angle;
-    }
-
-
-    /**
-     * 
-     * TODO Write a one-sentence summary of your class here. TODO Follow it with
-     * additional details about its purpose, what abstraction it represents, and
-     * how to use it.
+     *  follow it with additional details about its purpose, what abstraction
+     *  it represents, and how to use it.
      *
-     * @author shuang248
-     * @version May 11, 2018
-     * @author Period: TODO
-     * @author Assignment: Robo05PartsBot
+     *  @author  wzhang831
+     *  @version May 10, 2018
+     *  @author  Period: TODO
+     *  @author  Assignment: Robo05PartsBot
      *
-     * @author Sources: TODO
+     *  @author  Sources: TODO
      */
     public class Radar implements RobotPart
     {
         /**
-         * something
-         */
-        int radarDirection;
-
-
-        /**
-         * something
+         * nothing hre
          */
         public void init()
         {
-            setAdjustRadarForGunTurn( true );
-            radarDirection = 0;
-
+            setAdjustRadarForGunTurn(true);
         }
 
-
         /**
-         * something
+         * nothing hre
          */
         public void move()
         {
-            if ( enemy.none() )
-            {
-                // look around if we have no enemy
-                setTurnRadarRight( 360 );
-            }
-            else
-            {
-                // oscillate the radar
-                double turn = getHeading() - getRadarHeading() + enemy.getBearing();
-                turn += 30 * radarDirection;
-                setTurnRadarRight( normalizeBearing( turn ) );
-                radarDirection *= -1;
-            }
-
+            setTurnRadarRight(90);
         }
 
-
+        
+        
         /**
-         * something
          * 
-         * @return something
-         * @param e something
+         * here
+         * @param e     no
+         * @return  boolean value
          */
         public boolean shouldTrack( ScannedRobotEvent e )
         {
@@ -256,12 +201,11 @@ public class LoserBot extends AdvancedRobot
                 || e.getName().equals( enemy.getName() ) );
         }
 
-
         /**
-         * something
          * 
-         * @return soemthing
-         * @param e something
+         * here
+         * @param e     no
+         * @return  boolean value
          */
         public boolean wasTracking( RobotDeathEvent e )
         {
@@ -269,190 +213,83 @@ public class LoserBot extends AdvancedRobot
         }
     }
 
-
     /**
      * 
-     * TODO Write a one-sentence summary of your class here. TODO Follow it with
-     * additional details about its purpose, what abstraction it represents, and
-     * how to use it.
+     *  al details about its purpose, what abstraction
+     *  it represents, and how to use it.
      *
-     * @author shuang248
-     * @version May 11, 2018
-     * @author Period: TODO
-     * @author Assignment: Robo05PartsBot
+     *  @author  wzhang831
+     *  @version May 10, 2018
+     *  @author  Period: TODO
+     *  @author  Assignment: Robo05PartsBot
      *
-     * @author Sources: TODO
+     *  @author  Sources: TODO
      */
     public class Gun implements RobotPart
     {
-        private AdvancedEnemyBot enemy = new AdvancedEnemyBot();
-        private byte radarDirection = 1;
-        private byte moveDirection = 1;
-
         /**
-         * something
+         * fwef
          */
         public void init()
         {
-            
-            
+            setAdjustGunForRobotTurn(true);
         }
-
-
+        
+        
+        
+        
+        
         /**
-         * something
+         * nooooooooo
          */
         public void move()
         {
-         // divorce radar movement from gun movement
-            setAdjustRadarForGunTurn( true );
-            // divorce gun movement from tank movement
-            setAdjustGunForRobotTurn( true );
-            // we have no enemy yet
-            enemy.reset();
-            // initial scan
-            setTurnRadarRight( 360 );
-
-            while ( true )
+         // don't shoot if I've the is no enemy
+            if ( enemy.none() ) {
+                return;
+            }
+            double firePower = Math.min( 500 / enemy.getDistance(), 3 );
+            double bulletSpeed = 20 - firePower * 3;
+            long time = (long)( enemy.getDistance() / bulletSpeed );
+            double futureX = enemy.getFutureX( time );
+            double futureY = enemy.getFutureY( time );
+            double absDeg = absoluteBearing( getX(), getY(), futureX, futureY );
+            setTurnGunRight( normalizeBearing( absDeg - getGunHeading() ) );
+            if ( getGunHeat() == 0 && Math.abs( getGunTurnRemaining() ) < 10 )
             {
-                // rotate the radar
-                setTurnRadarRight( 360 );
-
-                // sit & spin
-                setTurnRight( 5 );
-                setAhead( 20 );
-                execute();
+                setFire( firePower );
             }
-        }
-
-
-        /**
-         * 
-         * TODO Write your method description here.
-         * 
-         * @return double
-         * @param x1
-         *            a
-         * @param y1
-         *            a
-         * @param x2
-         *            a
-         * @param y2
-         *            a
-         */
-
-        double absoluteBearing( double x1, double y1, double x2, double y2 )
-        {
-            double xo = x2 - x1;
-            double yo = y2 - y1;
-            double hyp = Point2D.distance( x1, y1, x2, y2 );
-            double arcSin = Math.toDegrees( Math.asin( xo / hyp ) );
-            double bearing = 0;
-
-            if ( xo > 0 && yo > 0 )
-            { // both pos: lower-Left
-                bearing = arcSin;
-            }
-            else if ( xo < 0 && yo > 0 )
-            { // x neg, y pos: lower-right
-                bearing = 360 + arcSin; // arcsin is negative here, actually 360
-                                        // -
-                                        // ang
-            }
-            else if ( xo > 0 && yo < 0 )
-            { // x pos, y neg: upper-left
-                bearing = 180 - arcSin;
-            }
-            else if ( xo < 0 && yo < 0 )
-            { // both neg: upper-right
-                bearing = 180 - arcSin; // arcsin is negative here, actually 180
-                                        // +
-                                        // ang
-            }
-
-            return bearing;
-        }
-
-
-        /**
-         * 
-         * TODO Write your method description here.
-         * 
-         * @param angle a
-         *            
-         * @return a
-         */
-        // normalizes a bearing to between +180 and -180
-        double normalizeBearing( double angle )
-        {
-            while ( angle > 180 )
-            {
-                angle -= 360;
-            }
-
-            while ( angle < -180 )
-            {
-                angle += 360;
-            }
-
-            return angle;
         }
     }
-
-
     /**
-     * something
+     *  w it with additional details about its purpose, what abstraction
+     *  it represents, and how to use it.
+     *
+     *  @author  wzhang831
+     *  @version May 10, 2018
+     *  @author  Period: TODO
+     *  @author  Assignment: Robo05PartsBot
+     *
+     *  @author  Sources: TODO
      */
     public class Tank implements RobotPart
     {
         /**
-         * something
-         */
-        private byte moveDirection;
-
-
-        /**
-         * something
+         * fwef
          */
         public void init()
         {
-            moveDirection = 1;
+            setColors(null, Color.RED, Color.GREEN, null, new Color(150, 0, 150));
         }
 
-
         /**
-         * something
+         * fwef
          */
         public void move()
         {
-            // turn slightly toward our enemy
-            setTurnRight( normalizeBearing(
-                enemy.getBearing() + 90 - ( 15 * moveDirection ) ) );
-
-            // strafe toward him
-            if ( getTime() % 20 == 0 )
-            {
-                moveDirection *= -1;
-                setAhead( 150 * moveDirection );
-            }
-        }
-
-
-        /**
-         * @return double something
-         * @param angle something
-         */
-        double normalizeBearing( double angle )
-        {
-            while ( angle > 180 ) {
-                angle -= 360;
-            }
-                
-            while ( angle < -180 ) {
-                angle += 360;
-            }
-                
-            return angle;
+            setAhead(10);
+            setAhead(-10);
         }
     }
+    
 }
