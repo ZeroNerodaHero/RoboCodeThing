@@ -30,53 +30,7 @@ public class PartsBot extends AdvancedRobot
      * @return double
      */
     // normalizes a bearing to between +180 and -180
-    public double normalizeBearing( double angle )
-    {
-        while ( angle > 180 ) {
-            angle -= 360;
-        }
-        while ( angle < -180 ) {
-            angle += 360;
-        }
-        return angle;
-    }
     
-    /**
-     * 
-     * weeddddooododfsdfs
-     * @param x1    john
-     * @param y1    jon
-     * @param x2    johnny
-     * @param y2    jonny
-     * @return smthing dopble
-     */
-    public double absoluteBearing( double x1, double y1, double x2, double y2 )
-    {
-        double xo = x2 - x1;
-        double yo = y2 - y1;
-        double hyp = Point2D.distance( x1, y1, x2, y2 );
-        double arcSin = Math.toDegrees( Math.asin( xo / hyp ) );
-        double bearing = 0;
-
-        if ( xo > 0 && yo > 0 )
-        { // both pos: lower-Left
-            bearing = arcSin;
-        }
-        else if ( xo < 0 && yo > 0 )
-        { // x neg, y pos: lower-right
-            bearing = 360 + arcSin; 
-        }
-        else if ( xo > 0 && yo < 0 )
-        { // x pos, y neg: upper-left
-            bearing = 180 - arcSin;
-        }
-        else if ( xo < 0 && yo < 0 )
-        { // both neg: upper-right
-            bearing = 180 - arcSin;
-        }
-
-        return bearing;
-    }
     /**
      * John is not here
      */
@@ -109,20 +63,14 @@ public class PartsBot extends AdvancedRobot
      */
     public void onScannedRobot( ScannedRobotEvent e )
     {
-        Radar radar = (Radar)parts[RADAR];
-        if ( radar.shouldTrack( e ) ) {
-            enemy.update( e, this );
-        }
+        
     }
     /**
      * @param e     no
      */
     public void onRobotDeath( RobotDeathEvent e )
     {
-        Radar radar = (Radar)parts[RADAR];
-        if ( radar.wasTracking( e ) ) {
-            enemy.reset();
-        }
+        
     }
 
     
@@ -174,7 +122,6 @@ public class PartsBot extends AdvancedRobot
          */
         public void init()
         {
-            setAdjustRadarForGunTurn(true);
         }
 
         /**
@@ -182,34 +129,6 @@ public class PartsBot extends AdvancedRobot
          */
         public void move()
         {
-            setTurnRadarRight(90);
-        }
-
-        
-        
-        /**
-         * 
-         * here
-         * @param e     no
-         * @return  boolean value
-         */
-        public boolean shouldTrack( ScannedRobotEvent e )
-        {
-            // track if we have no enemy, the one we found is significantly
-            // closer, or we scanned the one we've been tracking.
-            return ( enemy.none() || e.getDistance() < enemy.getDistance() - 70
-                || e.getName().equals( enemy.getName() ) );
-        }
-
-        /**
-         * 
-         * here
-         * @param e     no
-         * @return  boolean value
-         */
-        public boolean wasTracking( RobotDeathEvent e )
-        {
-            return e.getName().equals( enemy.getName() );
         }
     }
 
@@ -232,7 +151,6 @@ public class PartsBot extends AdvancedRobot
          */
         public void init()
         {
-            setAdjustGunForRobotTurn(true);
         }
         
         
@@ -244,21 +162,6 @@ public class PartsBot extends AdvancedRobot
          */
         public void move()
         {
-         // don't shoot if I've the is no enemy
-            if ( enemy.none() ) {
-                return;
-            }
-            double firePower = Math.min( 500 / enemy.getDistance(), 3 );
-            double bulletSpeed = 20 - firePower * 3;
-            long time = (long)( enemy.getDistance() / bulletSpeed );
-            double futureX = enemy.getFutureX( time );
-            double futureY = enemy.getFutureY( time );
-            double absDeg = absoluteBearing( getX(), getY(), futureX, futureY );
-            setTurnGunRight( normalizeBearing( absDeg - getGunHeading() ) );
-            if ( getGunHeat() == 0 && Math.abs( getGunTurnRemaining() ) < 10 )
-            {
-                setFire( firePower );
-            }
         }
     }
     /**
@@ -287,8 +190,6 @@ public class PartsBot extends AdvancedRobot
          */
         public void move()
         {
-            setAhead(10);
-            setAhead(-10);
         }
     }
     
