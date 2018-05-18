@@ -1,0 +1,7 @@
+//this starts out at 0 degrees
+
+public boolean can_Shoot(ScannedRobotEvent r, int firepower){
+    double canShoot = sin(Math.pi)/(Math.sin(r.getBearingRadians())/r.getVelocity());
+    if(canShoot < 20 - 3*firepower) return true;
+    else return false;
+}
