@@ -1,0 +1,29 @@
+public void wallSmoothing()
+{
+    static double direction;    //1 for clockwise or -1 for counterclockwise
+    ...
+    // this is the absolute heading I want to move in to go clockwise or
+    // counterclockwise around my enemy if I want to move closer to them,
+    // I would use less of an offset from absBearing (I'll go right toward
+    // them if I move at absBearing)
+    double goalDirection = absBearing-Math.PI/2*direction;
+    Rectangle2D fieldRect = new Rectangle2D.Double(18, 18, getBattleFieldWidth()-36, 
+    getBattleFieldHeight()-36);
+    while (!fieldRect.contains(getX()+Math.sin(goalDirection)*120, getY()+
+           Math.cos(goalDirection)*120))
+    {
+       goalDirection += direction*.1;  //turn a little toward enemy and try again
+    }
+    double turn =
+        robocode.util.Utils.normalRelativeAngle(goalDirection-getHeadingRadians());
+    if (Math.abs(turn) > Math.PI/2)
+    {
+        turn = robocode.util.Utils.normalRelativeAngle(turn + Math.PI);
+       setBack(100);
+    }
+    else
+    {
+      setAhead(100);
+    }
+    setTurnRightRadians(turn);
+}
