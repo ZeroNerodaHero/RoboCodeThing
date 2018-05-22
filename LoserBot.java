@@ -82,6 +82,7 @@ public class PartsBot extends AdvancedRobot
         //run predictive_shooter()
         if(e.getlife <= 20) {
             //shoot things
+            predictiveshooter();
         }
     }
 
