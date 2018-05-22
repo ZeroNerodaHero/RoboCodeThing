@@ -56,11 +56,32 @@ public class PartsBot extends AdvancedRobot
         }
     }
     
-    public void onRobotDeath( RobotDeathEvent e )
+    public void onScannedRobot( ScannedRobotEvent e )
     {
         Radar radar = (Radar)parts[RADAR];
-        if ( radar.wasTracking( e ) ) {
-            enemy.reset();
+        if ( radar.shouldTrack( e ) ) {
+            enemy.update( e, this );
+        }
+        //if the number of bots != 1 -> melee mode
+        if(firemode != 1) {
+            meleemode(e);
+        } else {
+            duelmode(e);
+        }
+    }
+    //when the robot is in melee mode
+    public void meleemode(ScannedRobotEvent e) {
+        //run predictive_shooter()
+        firemode = getOthers();
+        if(getOthers == 1) {
+            duelmode(e)
+        }
+    }
+    //when the robot is in duel mode
+    public void duelmode(ScannedRobotEvent e) {
+        //run predictive_shooter()
+        if(e.getlife <= 20) {
+            //shoot things
         }
     }
 
