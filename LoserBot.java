@@ -114,27 +114,4 @@ public class PartsBot extends AdvancedRobot
             return e.getName().equals( enemy.getName() );
         }
     }
-    
-    public class Gun implements RobotPart
-    {
-        public void init()
-        {
-            setAdjustGunForRobotTurn(true);
-        }
-        public void move()
-        {
-         
-        }
-    }
-    public class Tank implements RobotPart
-    {
-        public void init()
-        {
-            setColors(null, Color.RED, Color.GREEN, null, new Color(150, 0, 150));
-        }
-        public void move()
-        {
-        }
-    }
-    
 }
