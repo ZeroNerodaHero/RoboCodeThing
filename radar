@@ -1,5 +1,0 @@
-public void osilatedRadar()
-{
-    setAdjustRadarTurn();
-    setTurnRadarRight(45);
-}
