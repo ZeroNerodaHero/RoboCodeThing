@@ -34,7 +34,7 @@ public class PartsBot extends AdvancedRobot
     //Create class Rectangle2D inside the Util class
         public abstract class Rectangle2D extends RectangularShape
         {
-	    //Variable created for cotroling direction(1 || -1)
+	    //Variable created for cotroling direction(1 or -1)
             static double direction;
 	    //variable goalDirection
             double goalDirection = absBearing - Math.PI / 2 * direction;
@@ -87,14 +87,6 @@ public class PartsBot extends AdvancedRobot
             if ( i == 0 ) {
                 execute();
             }
-        }
-    }
- 
-    public void onScannedRobot( ScannedRobotEvent e )
-    {
-        Radar radar = (Radar)parts[RADAR];
-        if ( radar.shouldTrack( e ) ) {
-            enemy.update( e, this );
         }
     }
     
