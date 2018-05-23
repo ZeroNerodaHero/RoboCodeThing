@@ -28,13 +28,17 @@ public class PartsBot extends AdvancedRobot
     
     
     
-    
+    //Create class Util
     public abstract class Util
     {
+    //Create class Rectangle2D inside the Util class
         public abstract class Rectangle2D extends RectangularShape
         {
+	    //Variable created for cotroling direction(1 || -1)
             static double direction;
+	    //variable goalDirection
             double goalDirection = absBearing - Math.PI / 2 * direction;
+	    //Use Rectangle2D to create a rectangle with x-coordinate, y-coordinate, width, height given
             Rectangle2D fieldRect = new Rectangle2D.Double(18, 18, getBattleFieldWidth() - 36, getBattleFieldHeight() - 36);
             while (! fieldRect.contains(getX() + Math.sin(goalDirection) * 120, getY() + Math.cos(goalDirection) * 120))
             {
