@@ -70,13 +70,29 @@ public class PartsBot extends AdvancedRobot
     
     public class Radar implements RobotPart
     {
+        int radarDirection;
         public void init()
         {
             setAdjustRadarForGunTurn(true);
+            radarDirection = 0;
         }
         public void move()
         {
-            setTurnRadarRight(90);
+            if ( enemy.none() )
+            {
+                // look around
+                setTurnRadarRight( 360 );
+            }
+            else
+            {
+                // keep him inside a cone
+                double turn = getHeading() - getRadarHeading()
+                    + enemy.getBearing();
+                turn += 30 * radarDirection;
+                setTurnRadarRight( turn );
+                radarDirection *= -1;
+                enemy.reset();
+            }
         }
         public boolean shouldTrack( ScannedRobotEvent e )
         {
