@@ -5,17 +5,6 @@ import robocode.*;
 import java.awt.Color;
 import java.awt.geom.Point2D;
 
-/**
- * A modular bot adhering to the RoboPart Interface.
- * 
- * @author TODO Your Name
- * @version TODO Date
- * 
- * @author Period - TODO Your Period
- * @author Assignment - PartsBot
- * 
- * @author Sources - TODO list collaborators
- */
 public class PartsBot extends AdvancedRobot
 {
     private AdvancedEnemyBot enemy = new AdvancedEnemyBot();
