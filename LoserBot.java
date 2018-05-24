@@ -10,10 +10,15 @@ public class PartsBot extends AdvancedRobot
     private AdvancedEnemyBot enemy = new AdvancedEnemyBot();
     private Radar newRadar = new Radar();
     private int firemode = getOthers();
+    
     private double enemy_energy = 100;
+    private int enemy_xpos = 0;
+    private int enemy_ypos = 0;
+    
     private int movedir = 1;
     private int turndir = 1;
     private Random rand = new Random();
+    
     public void run()
     {
         //don't do anything until u find the enemy robot
@@ -24,7 +29,11 @@ public class PartsBot extends AdvancedRobot
     public void onScannedRobot( ScannedRobotEvent e )
     {
         Radar radar = (Radar) newRadar;
+        
         firemode = getOthers();
+        enemy_xpos = e.getX();
+        enemy_ypos = e.getY();
+        
         if ( radar.shouldTrack( e ) ) {
             enemy.update( e, this );
         }
@@ -35,6 +44,7 @@ public class PartsBot extends AdvancedRobot
             duelmode(e);
         }
     }
+    
     //when the robot is in melee mode
     public void meleemode(ScannedRobotEvent e) {
         //run predictive_shooter()
@@ -43,6 +53,7 @@ public class PartsBot extends AdvancedRobot
             duelmode(e)
         } runaway(e);
     }
+    
     //when the robot is in duel mode
     public void duelmode(ScannedRobotEvent e) {
         //run predictive_shooter()
@@ -64,17 +75,18 @@ public class PartsBot extends AdvancedRobot
             //moves away from the enemy
             setTurnRight(5 * turndir);
             setAhead(e.getVelocity * movedir);
+            //tell where it is heading
             movedir *= -1;
         }
     }
     
     //attack the enemy robot
     public void engage(ScannedRobotEvent e){
-        //move towards the bot
-        /*
-        .....code
-        */
-        predictiveshooter();
+        setTurnRight(e.getBearing());
+        setAhead(e.getDistance + 5);
+        
+        //tell where it is heading
+        fire(1);
     }
     
     public interface RobotPart
