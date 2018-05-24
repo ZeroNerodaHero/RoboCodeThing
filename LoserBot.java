@@ -18,9 +18,12 @@ import java.awt.geom.Point2D;
 public class PartsBot extends AdvancedRobot
 {
     private AdvancedEnemyBot enemy = new AdvancedEnemyBot();
-    private newRadar = new Radar();
+    private Radar newRadar = new Radar();
+    private int firemode = getOthers();
+    
     public void run()
     {
+        //don't do anything until u find the enemy robot
         newRadar.move();
     }
  
@@ -30,6 +33,7 @@ public class PartsBot extends AdvancedRobot
         if ( radar.shouldTrack( e ) ) {
             enemy.update( e, this );
         }
+        
     }
     
     public void onScannedRobot( ScannedRobotEvent e )
@@ -51,17 +55,27 @@ public class PartsBot extends AdvancedRobot
         firemode = getOthers();
         if(getOthers == 1) {
             duelmode(e)
-        }
+        } runaway(e);
     }
     //when the robot is in duel mode
     public void duelmode(ScannedRobotEvent e) {
         //run predictive_shooter()
         if(e.getlife <= 20) {
             //shoot things
-            predictiveshooter();
-        }
+            engage(e);
+        } runaway(e);
     }
-
+    
+    //act like a chicken to dodge bullets
+    public void runaway(ScannedRobotEvent e){
+        
+    }
+    
+    //attack the enemy robot
+    public void engage(ScannedRobotEvent e){
+        predictiveshooter();
+    }
+    
     public interface RobotPart
     {
         public void init();
