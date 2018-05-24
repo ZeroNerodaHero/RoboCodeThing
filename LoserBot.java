@@ -20,19 +20,11 @@ public class PartsBot extends AdvancedRobot
         newRadar.move();
         int turndir = rand.nextInt(1);
     }
- 
-    public void onScannedRobot( ScannedRobotEvent e )
-    {
-        Radar radar = (Radar) newRadar;
-        if ( radar.shouldTrack( e ) ) {
-            enemy.update( e, this );
-        }
-        firemode = getOthers();
-    }
     
     public void onScannedRobot( ScannedRobotEvent e )
     {
         Radar radar = (Radar) newRadar;
+        firemode = getOthers();
         if ( radar.shouldTrack( e ) ) {
             enemy.update( e, this );
         }
