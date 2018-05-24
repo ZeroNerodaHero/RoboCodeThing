@@ -1,5 +1,6 @@
 package robo;
 
+import java.util.Random;
 import robocode.*;
 import java.awt.Color;
 import java.awt.geom.Point2D;
@@ -20,11 +21,15 @@ public class PartsBot extends AdvancedRobot
     private AdvancedEnemyBot enemy = new AdvancedEnemyBot();
     private Radar newRadar = new Radar();
     private int firemode = getOthers();
-    
+    private double enemy_energy = 100;
+    private int movedir = 1;
+    private int turndir = 1;
+    private Random rand = new Random();
     public void run()
     {
         //don't do anything until u find the enemy robot
         newRadar.move();
+        int turndir = rand.nextInt(1);
     }
  
     public void onScannedRobot( ScannedRobotEvent e )
@@ -33,7 +38,7 @@ public class PartsBot extends AdvancedRobot
         if ( radar.shouldTrack( e ) ) {
             enemy.update( e, this );
         }
-        
+        firemode = getOthers();
     }
     
     public void onScannedRobot( ScannedRobotEvent e )
@@ -66,13 +71,28 @@ public class PartsBot extends AdvancedRobot
         } runaway(e);
     }
     
+    public boolean didenemyshoot(ScannedRobotEvent e){
+        if(e.getEnergy() != enemy_energy){
+            return true;
+        } return false;
+    }
+    
     //act like a chicken to dodge bullets
     public void runaway(ScannedRobotEvent e){
-        
+        if(didenemyshoot(e)){
+            //moves away from the enemy
+            setTurnRight(5 * turndir);
+            setAhead(e.getVelocity * movedir);
+            movedir *= -1;
+        }
     }
     
     //attack the enemy robot
     public void engage(ScannedRobotEvent e){
+        //move towards the bot
+        /*
+        .....code
+        */
         predictiveshooter();
     }
     
