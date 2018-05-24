@@ -1,7 +1,0 @@
-public void run()
-{
-    do
-    {
-        turnRadarRightRadians(Double.POSITIVE.INFINITY);
-        while (true)
-        }
