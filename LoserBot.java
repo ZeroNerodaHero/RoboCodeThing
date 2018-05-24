@@ -18,39 +18,15 @@ import java.awt.geom.Point2D;
 public class PartsBot extends AdvancedRobot
 {
     private AdvancedEnemyBot enemy = new AdvancedEnemyBot();
-    
-    private RobotPart[] parts = new RobotPart[3]; // make three parts
-    private final static int RADAR = 0;
-    private final static int GUN = 1;
-    private final static int TANK = 2;
-    
+    private newRadar = new Radar();
     public void run()
     {
-        parts[RADAR] = new Radar();
-        parts[GUN] = new Gun();
-        parts[TANK] = new Tank();
-
-        // initialize each part
-        for ( int i = 0; i < parts.length; i++ )
-        {
-            // behold, the magic of polymorphism
-            parts[i].init();
-        }
-
-        // iterate through each part, moving them as we go
-        for ( int i = 0; true; i = ( i + 1 ) % parts.length )
-        {
-            // polymorphism galore!
-            parts[i].move();
-            if ( i == 0 ) {
-                execute();
-            }
-        }
+        newRadar.move();
     }
  
     public void onScannedRobot( ScannedRobotEvent e )
     {
-        Radar radar = (Radar)parts[RADAR];
+        Radar radar = (Radar) newRadar;
         if ( radar.shouldTrack( e ) ) {
             enemy.update( e, this );
         }
@@ -58,7 +34,7 @@ public class PartsBot extends AdvancedRobot
     
     public void onScannedRobot( ScannedRobotEvent e )
     {
-        Radar radar = (Radar)parts[RADAR];
+        Radar radar = (Radar) newRadar;
         if ( radar.shouldTrack( e ) ) {
             enemy.update( e, this );
         }
