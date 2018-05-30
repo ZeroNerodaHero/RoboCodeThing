@@ -109,6 +109,8 @@ public class PBot extends AdvancedRobot
             setTurnRadarRightRadians(Double.POSITIVE_INFINITY);
         }
         
+        //if there is no enemy scan 360
+        //else follow it
         public void move()
         {
             if ( enemy.none() )
@@ -121,7 +123,7 @@ public class PBot extends AdvancedRobot
                 double turn = normalizeBearing(enemy.getBearing() - getRadarHeading()
                    + getHeading());
                 
-                turn += 10* radarDirection;
+                turn += 10 * radarDirection;
                 setTurnRadarRight( turn );
                 radarDirection *= -1;
             }
@@ -155,6 +157,7 @@ public class PBot extends AdvancedRobot
             if ( enemy.none() ) {
                 return;
             } 
+            
             double absoluteBearing = getHeading() + enemy.getBearing();
             // calculate firepower based on distance
             double firePower = Math.min( 500 / enemy.getDistance(), 3 );
@@ -163,8 +166,7 @@ public class PBot extends AdvancedRobot
             // distance = rate * time, solved for time
             long time = (long)( enemy.getDistance() / bulletSpeed );
             
-            if (enemy.getDistance() >= 150) 
-                time = time/2;
+            if (enemy.getDistance() >= 150) time = time/2;
                 
             // calculate gun turn to predicted x,y location
             double futureX = enemy.getFutureX( time );
@@ -177,8 +179,6 @@ public class PBot extends AdvancedRobot
                 setFire( firePower );
             }
         }
-        
-        
         
         double absoluteBearing(double x1, double y1, double x2, double y2) {
             double xo = x2-x1;
@@ -201,7 +201,6 @@ public class PBot extends AdvancedRobot
 
     }
 
-
     //----------------------------------------------------------------
     public class Tank implements RobotPart
     {
@@ -220,10 +219,16 @@ public class PBot extends AdvancedRobot
             commit = false;
         }
 
+        
         public void move()
         {
             i++;
-            if ((enemy.getDistance() < 200 && getEnergy() - 5> enemy.getEnergy() && !enemy.none()) || commit ) { //&& getEnergy() > enemy.getEnergy()
+            /** rams the enemy if:
+                it is close and is there
+                has less energy than our bot
+                commit makes the robot always ram after ramming once
+            */
+            if ((enemy.getDistance() < 200 && getEnergy() - 5> enemy.getEnergy() && !enemy.none()) || commit ) {
                 System.out.println( "dist\t" + enemy.getDistance() );
                 commit = true;
                 
@@ -231,6 +236,10 @@ public class PBot extends AdvancedRobot
                 if (Math.abs( getTurnRemaining() ) < 10)
                     setAhead(200);
             }
+            /**
+            It will move back at forth if it hits a wall or after a random amount of time(i)
+            Spiral movement
+            */
             else {
                 System.out.println( "Rand\t" + i + "\t" + moveDirection );
                 if(getVelocity() == 8) {
