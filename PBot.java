@@ -166,7 +166,7 @@ public class PBot extends AdvancedRobot
             // distance = rate * time, solved for time
             long time = (long)( enemy.getDistance() / bulletSpeed );
             
-            if (enemy.getDistance() >= 150) time = time/2;
+            if (enemy.getDistance() >= 150) time /= 2;
                 
             // calculate gun turn to predicted x,y location
             double futureX = enemy.getFutureX( time );
