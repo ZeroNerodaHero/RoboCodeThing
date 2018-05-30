@@ -3,11 +3,13 @@ package bsn;
 import robocode.*;
 
 
+
 import java.awt.*;
 import java.awt.geom.*;
 import java.util.*;
 import java.util.Random;
- 
+import robocode.control.*;
+
 
 import robocode.util.*;
 
@@ -40,13 +42,14 @@ public class PBot extends AdvancedRobot
     
     static double energyChange;
 
-
+    //private BattlefieldSpecification  map = new BattlefieldSpecification();
     /**
      * something
      */
 
     public void run()
     {
+        
         parts[RADAR] = new Radar();
         parts[GUN] = new Gun();
         parts[TANK] = new Tank();
@@ -89,7 +92,7 @@ public class PBot extends AdvancedRobot
         energyChange=(enemyEnergy-(e.getEnergy()));
         enemyEnergy = e.getEnergy();
         Radar radar = (Radar)parts[RADAR];
-        if ( radar.shouldTrack( e ) ) {
+        if ( true ) {//radar.shouldTrack( e ) ) {
             enemy.update( e, this );
         }
     }
@@ -274,9 +277,10 @@ public class PBot extends AdvancedRobot
         {
          // don't shoot if I've got no enemy
             if ( enemy.none() ) {
+                
                 return;
             }
-            System.out.println( "gun move:" + enemy.getX() + " " + enemy.getY() );    
+            //System.out.println( "gun move:" + enemy.getX() + " " + enemy.getY() );    
             double absoluteBearing = getHeading() + enemy.getBearing();
             // calculate firepower based on distance
             double firePower = Math.min( 500 / enemy.getDistance(), 3 );
@@ -284,11 +288,14 @@ public class PBot extends AdvancedRobot
             double bulletSpeed = 20 - firePower * 3;
             // distance = rate * time, solved for time
             long time = (long)( enemy.getDistance() / bulletSpeed );
-
+            if (enemy.getDistance() >= 150) 
+                time = time/2;
             // calculate gun turn to predicted x,y location
             double futureX = enemy.getFutureX( time );
             double futureY = enemy.getFutureY( time );
-            double absDeg = absoluteBearing(getX(), getY(), enemy.getX(),enemy.getY());
+            double absDeg = absoluteBearing(getX(), getY(), futureX,futureY);
+            setTurnGunRight( normalizeBearing( absDeg - getGunHeading()) );
+            //System.out.println("enemy.getX\t" + enemy.getX() + "\tenemy.getY\t" + enemy.getY());
             // non-predictive firing can be done like this:
             // double absDeg = absoluteBearing(getX(), getY(), enemy.getX(),enemy.getY());
             /**
@@ -298,21 +305,19 @@ public class PBot extends AdvancedRobot
             */
             // turn the gun to the predicted x,y location
             //setTurnGunRight( normalizeBearing( absDeg - getGunHeading()) );
-            setTurnGunRight( normalizeBearing( absDeg - getGunHeading()) );
+            
+            
             //System.out.println( "THE TURN:" + normalizeBearing( absDeg - getGunHeading()) );
             // if the gun is cool and we're pointed in the right direction, shoot!
-            /**
+            
             if ( getGunHeat() == 0 && Math.abs( getGunTurnRemaining() ) < 10 )
             {
                 setFire( firePower );
             }
-            */
-            /**
-            double energyChange=(enemyEnergy-(enemyEnergy=enemy.getEnergy()));
-            if(energyChange<=3&&energyChange>=0.1){
-                setFire(firePower);
-            }
-            */
+            
+            
+            
+            
         }
         
         
@@ -333,7 +338,7 @@ public class PBot extends AdvancedRobot
             } else if (xo < 0 && yo < 0) { // both neg: upper-right b l
                 bearing = 180 - arcSin; // arcsin is negative here, actually 180 + ang
             }
-            //System.out.println( "ABSbearing: x: " + xo + " y: "+ yo + " hyp: " + hyp + " b: " + bearing );
+           //System.out.println( "ABSbearing: x: " + xo + " y: "+ yo + " hyp: " + hyp + " b: " + bearing );
             return bearing;
         }
 
@@ -349,7 +354,10 @@ public class PBot extends AdvancedRobot
          * something
          */
         private byte moveDirection;
-
+        int i;
+        double rand;
+        boolean turn, commit;
+        Random r = new Random();
 
         /**
          * something
@@ -357,8 +365,11 @@ public class PBot extends AdvancedRobot
         public void init()
         {
             moveDirection = 1;
-            
-            setTurnRight(-getHeading()+90);
+            i = 0;
+            rand =  r.nextInt( 50 ) + 10;
+            turn = false;
+            commit = false;
+            //setTurnRight(-getHeading()-0);
         }
 
 
@@ -367,23 +378,49 @@ public class PBot extends AdvancedRobot
          */
         public void move()
         {
+            
+            
+            
+            //double forwarddist = r.nextDouble() * 150;
+            
+            i++;
             /**
-            Random r = new Random();
-            //if(energyChange != 0) {
-            //    ahead(r.nextDouble() * 40);
-            //}
-            double forwarddist = r.nextDouble() * 150;
-            // turn slightly toward our enemy
-            setTurnRight( normalizeBearing(
-                enemy.getBearing() + 90 - ( 15 * moveDirection ) ) );
-
-            // strafe toward him
-            if ( getTime() % 20 == 0 )
-            {
+            if ( ((getX() - 50 <= 18 || getX() + 50 >= 782 || getY() - 50 <= 18 || getY() + 50 >= 582) || getVelocity() == 0) && i >25 ) {
                 moveDirection *= -1;
-                setAhead( forwarddist * moveDirection );
+                i = 0;
             }
             */
+            if ((enemy.getDistance() < 200 && getEnergy() - 5> enemy.getEnergy() && !enemy.none()) || commit ) { //&& getEnergy() > enemy.getEnergy()
+                System.out.println( "dist\t" + enemy.getDistance() );
+                commit = true;
+                
+                setTurnRight( normalizeBearing( enemy.getBearing() ) );
+                if (Math.abs( getTurnRemaining() ) < 10)
+                    setAhead(200);
+            }
+            else {
+                System.out.println( "Rand\t" + i + "\t" + moveDirection );
+                if(getVelocity() == 8) {
+                    turn = true;
+                }
+                if(i == rand) {
+                    moveDirection *= -1;
+                    i = 0;
+                    rand =  r.nextInt( 50 ) + 10;
+                    turn = false;
+                }
+                if (getVelocity() == 0 && turn == true) {
+                    moveDirection *= -1;
+                    i = 0;
+                } 
+                // spiral toward our enemy
+                setTurnRight( normalizeBearing( enemy.getBearing() + 90
+                    - ( 30 * moveDirection ) ) );
+                setAhead( enemy.getDistance() * moveDirection );
+                //setAhead( rand * moveDirection );
+            }
+            
+            
         }
 
 
